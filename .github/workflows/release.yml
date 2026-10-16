@@ -62,8 +62,7 @@ jobs:
         with:
           ref: ${{ needs.prepare.outputs.sha }}
       - uses: jdx/mise-action@v5
-      - run: cargo test --workspace --locked
-      - run: cargo build --release --locked --target ${{ matrix.target }}
+      - run: mise run build --target ${{ matrix.target }}
       - name: Name the binary
         run: mv "target/${{ matrix.target }}/release/kgrant" "kgrant-v${{ inputs.version }}-${{ matrix.target }}"
       - uses: actions/upload-artifact@v7

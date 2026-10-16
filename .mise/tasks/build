@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Build the production binary (target/[<target>/]release/kgrant)"
+#USAGE flag "--target <target>" help="Rust target triple to build for"
+set -euo pipefail
+
+args=(--release --locked)
+if [[ -n "${usage_target:-}" ]]; then
+  args+=(--target "$usage_target")
+fi
+cargo build "${args[@]}"

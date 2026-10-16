@@ -17,7 +17,7 @@ jobs:
       - uses: jdx/mise-action@v5
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets -- -D warnings
-      - run: cargo test --workspace
+      - run: mise run test
 
   # The test database for manual testing (docs/testing.md) is built from
   # tests/manual/database.xml; this catches a broken definition or task.

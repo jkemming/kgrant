@@ -16,10 +16,10 @@ One package, `kgrant`, with a library and the CLI binary.
 ```sh
 cargo fmt --all --check
 cargo clippy --workspace --all-targets -- -D warnings
-cargo test --workspace
+mise run test
 ```
 
-CI runs these on Linux and macOS. It also builds the test database for manual testing (`mise run database:import`, which needs `fish` and `keepassxc-cli`), to check that the database definition and the task still work.
+CI runs these on Linux and macOS. It also builds the test database for manual testing (`mise run database:import`, which needs `fish` and `keepassxc-cli`), to check that the database definition and the task still work. The release workflow builds the production binary with `mise run build` (`--target <triple>` to cross-target).
 
 ## Tests
 
