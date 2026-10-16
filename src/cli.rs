@@ -34,8 +34,8 @@ enum Command {
         /// prints its value, several need --json
         #[arg(required = true)]
         fields: Vec<String>,
-        /// Print a JSON object from field name to value (needed for several fields; values with
-        /// line breaks stay intact)
+        /// Print a JSON object from field name to value (needed for several fields, keeps
+        /// line breaks intact)
         #[arg(long)]
         json: bool,
     },

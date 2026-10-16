@@ -30,7 +30,7 @@ impl fmt::Display for Error {
         match self {
             Error::SocketNotFound(path) => write!(
                 f,
-                "KeePassXC socket not found at {}; is KeePassXC running with browser integration enabled?",
+                "KeePassXC socket not found at {}. Is KeePassXC running with browser integration enabled?",
                 path.display()
             ),
             Error::Connect(e) => write!(f, "cannot connect to KeePassXC: {e}"),

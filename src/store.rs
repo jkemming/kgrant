@@ -43,7 +43,7 @@ pub fn load(path: &Path) -> Result<Vec<Association>> {
     let mode = file.metadata()?.permissions().mode() & 0o777;
     if mode & 0o077 != 0 {
         return Err(format!(
-            "{} has permissions {mode:03o}, which let other users read it; run `chmod 600 {}`",
+            "{} has permissions {mode:03o}, which let other users read it. Run `chmod 600 {}`",
             path.display(),
             path.display()
         )

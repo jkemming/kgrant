@@ -16,7 +16,7 @@ pub(super) fn read_from_keepassxc(secrets: &[Secret]) -> Result<Vec<String>> {
     let path = store::association_path()?;
     let associations = store::load(&path)?;
     if associations.is_empty() {
-        return Err("not paired with KeePassXC yet; run `kgrant pair` first".into());
+        return Err("not paired with KeePassXC yet. Run `kgrant pair` first".into());
     }
 
     let mut client = connect()?;
@@ -36,7 +36,7 @@ fn lookup_many(
     // KeePassXC uses them for every open database if "search in all opened
     // databases" is on.
     active_association(client, associations)?.ok_or(
-        "the active KeePassXC database is not paired with this machine; switch to the right \
+        "the active KeePassXC database is not paired with this machine. Switch to the right \
          database, or run `kgrant pair` for this one",
     )?;
 
@@ -134,7 +134,7 @@ fn field_of(login: &Login, secret: &Secret) -> std::result::Result<String, Strin
         ))
     } else {
         Err(format!(
-            "the entry `{title}` (kgrant://{entry}) has no field `{FIELD_PREFIX}{field}`; its \
+            "the entry `{title}` (kgrant://{entry}) has no field `{FIELD_PREFIX}{field}`. Its \
              `{FIELD_PREFIX}` fields are: {}",
             names.join(", ")
         ))

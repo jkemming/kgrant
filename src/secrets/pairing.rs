@@ -24,7 +24,7 @@ fn pair_with(client: &mut Client, path: &Path) -> Result<()> {
     let association = client.associate().map_err(explain)?;
     let id = association.id.clone();
     store::add(path, association)?;
-    eprintln!("Paired as `{}`; saved to {}", id, path.display());
+    eprintln!("Paired as `{}`. Saved to {}", id, path.display());
     Ok(())
 }
 

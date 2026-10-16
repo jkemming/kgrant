@@ -24,7 +24,7 @@ pub(super) fn active_association<'a>(
 
 pub(super) fn connect() -> Result<Client> {
     let socket = crate::keepassxc::default_socket_path().ok_or(
-        "cannot determine the KeePassXC socket directory; on Linux, check XDG_RUNTIME_DIR",
+        "cannot determine the KeePassXC socket directory. On Linux, check XDG_RUNTIME_DIR",
     )?;
     Client::connect(&socket).map_err(explain)
 }
@@ -39,10 +39,10 @@ pub(super) fn explain(error: Error) -> Box<dyn std::error::Error> {
             "KeePassXC is not running (stale socket)".into()
         }
         e if e.is_database_locked() => {
-            "KeePassXC is locked; unlock the database and try again".into()
+            "KeePassXC is locked. Unlock the database and try again".into()
         }
         e if e.is_association_failed() => "the active KeePassXC database is not paired with \
-             this machine; switch to the right database, or run `kgrant pair` for this one"
+             this machine. Switch to the right database, or run `kgrant pair` for this one"
             .into(),
         _ => Box::new(error),
     }
