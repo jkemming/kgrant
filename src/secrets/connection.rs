@@ -23,8 +23,9 @@ pub(super) fn active_association<'a>(
 }
 
 pub(super) fn connect() -> Result<Client> {
-    let socket = crate::keepassxc::default_socket_path()
-        .ok_or("XDG_RUNTIME_DIR is not set, cannot find the KeePassXC socket")?;
+    let socket = crate::keepassxc::default_socket_path().ok_or(
+        "cannot determine the KeePassXC socket directory; on Linux, check XDG_RUNTIME_DIR",
+    )?;
     Client::connect(&socket).map_err(explain)
 }
 

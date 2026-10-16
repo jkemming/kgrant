@@ -13,7 +13,7 @@ The goals:
 
 `kgrant` uses the browser-integration native-messaging socket, the same channel browser extensions use.
 
-- The socket is `$XDG_RUNTIME_DIR/app/org.keepassxc.KeePassXC/org.keepassxc.KeePassXC.BrowserServer`. Messages are bare JSON objects with no length prefix.
+- On Linux, the socket is `$XDG_RUNTIME_DIR/app/org.keepassxc.KeePassXC/org.keepassxc.KeePassXC.BrowserServer`, falling back to `$XDG_RUNTIME_DIR/org.keepassxc.KeePassXC.BrowserServer`. On macOS, it is `org.keepassxc.KeePassXC.BrowserServer` inside the OS-provided per-user temporary directory (`getconf DARWIN_USER_TEMP_DIR`), independent of `XDG_RUNTIME_DIR` and overrides to `TMPDIR` (verified against KeePassXC's [socket-path implementation](https://github.com/keepassxreboot/keepassxc/blob/develop/src/browser/BrowserShared.cpp)). Messages are bare JSON objects with no length prefix.
 - Every connection makes a fresh session keypair (`change-public-keys`). Messages are NaCl `crypto_box` with a random 24-byte nonce (base64). The response nonce is the request nonce plus one (little-endian with carry, like libsodium's `sodium_increment`).
 - Inner responses carry `"success": "true"` as a string, but `get-logins` returns `count` as a number.
 - KeePassXC also sends unsolicited `database-locked` and `database-unlocked` messages. The client skips any message that is not the reply to its request.

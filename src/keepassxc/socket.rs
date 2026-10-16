@@ -1,17 +1,49 @@
-use std::path::{Path, PathBuf};
+#[cfg(any(not(target_os = "macos"), test))]
+use std::path::Path;
+use std::path::PathBuf;
 
 const SOCKET_NAME: &str = "org.keepassxc.KeePassXC.BrowserServer";
 
-/// Where KeePassXC listens, if `$XDG_RUNTIME_DIR` is set.
+/// Where KeePassXC listens, if the platform's runtime directory is available.
 ///
-/// Native builds use `app/org.keepassxc.KeePassXC/<name>`; the plain
-/// runtime-dir path is the fallback. Flatpak builds differ (unverified).
+/// macOS uses the OS-provided per-user temporary directory. Other Unix systems
+/// use `$XDG_RUNTIME_DIR`, preferring `app/org.keepassxc.KeePassXC/<name>` over
+/// the plain runtime-dir path. Flatpak builds differ (unverified).
 pub fn default_socket_path() -> Option<PathBuf> {
-    Some(socket_path_in(&PathBuf::from(std::env::var_os(
-        "XDG_RUNTIME_DIR",
-    )?)))
+    #[cfg(target_os = "macos")]
+    {
+        use std::ffi::{CString, OsString};
+        use std::os::unix::ffi::OsStringExt;
+
+        let length =
+            unsafe { libc::confstr(libc::_CS_DARWIN_USER_TEMP_DIR, std::ptr::null_mut(), 0) };
+        if length == 0 {
+            return None;
+        }
+        let mut buffer = vec![0_u8; length];
+        let written = unsafe {
+            libc::confstr(
+                libc::_CS_DARWIN_USER_TEMP_DIR,
+                buffer.as_mut_ptr().cast(),
+                length,
+            )
+        };
+        if written == 0 || written > length {
+            return None;
+        }
+        buffer.truncate(written);
+        let directory = CString::from_vec_with_nul(buffer).ok()?;
+        Some(PathBuf::from(OsString::from_vec(directory.into_bytes())).join(SOCKET_NAME))
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        Some(socket_path_in(&PathBuf::from(std::env::var_os(
+            "XDG_RUNTIME_DIR",
+        )?)))
+    }
 }
 
+#[cfg(any(not(target_os = "macos"), test))]
 fn socket_path_in(runtime: &Path) -> PathBuf {
     let nested = runtime
         .join("app/org.keepassxc.KeePassXC")
